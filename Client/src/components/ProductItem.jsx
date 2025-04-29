@@ -69,25 +69,23 @@ const ProductItem = ({ id, image, name, price }) => {
 
         const requestBody = {
           eventType: "system",
-          eventName: "product_viewed",
+          eventName: "PRODUCT VIEWED",
           userData: {
-            userId: "ad816505-e79e-42a9-947a-12f28b0d06c5",
-            name: "Siddhart Malhotra",
-            email: "Siddhart.Malhotra1234@exelaonline.com",
-            device: device, // This can be modified to detect dynamically if needed
-            mobile: 88832823890,
-            location: "delhi,India", // Dynamic Location
-            clientId: "8613dbc0-8eff-40c3-9a64-b10975194604",
-            browser: browser, // Dynamic Browser
-            os: os, // Dynamic OS
-            gender: "Male", // You need to fetch this manually
+            userId: localStorage.getItem("powerpush_user_id"),
+            clientId:"41AB81A4-042b-48ED-9d68-03fa53351766",
+            category: "event",
+            properties: {
+              abc: "xyz"
+            },
+            eventProperty: "CT App Version",
+            eventPropertyValue: "12.13.6"
           },
         };
 
         console.log("Final Request Body:", requestBody);
 
         const response = await axios.post(
-          "https://api.bengage.ai/eventproducer/api/v1/produceEvent",
+          "https://dev-api.powerpush.ai/eventproducer/api/v1/produceEvent",
           requestBody,
           {
             headers: {

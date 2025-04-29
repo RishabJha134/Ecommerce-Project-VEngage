@@ -66,25 +66,23 @@ const Login = () => {
 
         const requestBody = {
           eventType: "user",
-          eventName: "page_viewed",
+          eventName: "Page Viewed",
           userData: {
-            userId: "ad816505-e79e-42a9-947a-12f28b0d06c5",
-            name: "Siddhart Malhotra",
-            email: "Siddhart.Malhotra1234@exelaonline.com",
-            device: device, // This can be modified to detect dynamically if needed
-            mobile: 88832823890,
-            location: "delhi,India", // Dynamic Location
-            clientId: "8613dbc0-8eff-40c3-9a64-b10975194604",
-            browser: browser, // Dynamic Browser
-            os: os, // Dynamic OS
-            gender: "Male", // You need to fetch this manually
+            userId: localStorage.getItem("powerpush_user_id"),
+            clientId:"41AB81A4-042b-48ED-9d68-03fa53351766",
+            category: "event",
+            properties: {
+              abc: "xyz"
+            },
+            eventProperty: "CT App Version",
+            eventPropertyValue: "12.13.6"
           },
         };
 
         console.log("Final Request Body:", requestBody);
 
         const response = await axios.post(
-          "https://api.bengage.ai/eventproducer/api/v1/produceEvent",
+          "https://dev-api.powerpush.ai/eventproducer/api/v1/produceEvent",
           requestBody,
           {
             headers: {
@@ -176,23 +174,21 @@ const Login = () => {
           eventType: "user",
           eventName: "user login",
           userData: {
-            userId: "ad816505-e79e-42a9-947a-12f28b0d06c5",
-            name: "Siddhart Malhotra",
-            email: "Siddhart.Malhotra1234@exelaonline.com",
-            device: device, // This can be modified to detect dynamically if needed
-            mobile: 88832823890,
-            location: "delhi,India", // Dynamic Location
-            clientId: "8613dbc0-8eff-40c3-9a64-b10975194604",
-            browser: browser, // Dynamic Browser
-            os: os, // Dynamic OS
-            gender: "Male", // You need to fetch this manually
+            userId: localStorage.getItem("powerpush_user_id"),
+            clientId:"41AB81A4-042b-48ED-9d68-03fa53351766",
+            category: "event",
+            properties: {
+              abc: "xyz"
+            },
+            eventProperty: "CT App Version",
+            eventPropertyValue: "12.13.6"
           },
         };
 
         console.log("Final Request Body:", requestBody);
 
         const response = await axios.post(
-          "https://api.bengage.ai/eventproducer/api/v1/produceEvent",
+          "https://dev-api.powerpush.ai/eventproducer/api/v1/produceEvent",
           requestBody,
           {
             headers: {
@@ -277,11 +273,10 @@ const Login = () => {
           eventType: "user",
           eventName: "user registered",
           userData: {
-            userId: "ad816505-e79e-42a9-947a-12f28b0d06c5",
-            name: "Siddhart Malhotra",
-            email: "Siddhart.Malhotra1234@exelaonline.com",
-            device: device, // This can be modified to detect dynamically if needed
-            mobile: 88832823890,
+            name: name,
+            email: email,
+            deviceMake: device, // This can be modified to detect dynamically if needed
+            mobileNo: 88832823890,
             location: "delhi,India", // Dynamic Location
             clientId: "8613dbc0-8eff-40c3-9a64-b10975194604",
             browser: browser, // Dynamic Browser
@@ -293,7 +288,7 @@ const Login = () => {
         console.log("Final Request Body:", requestBody);
 
         const response = await axios.post(
-          "https://api.bengage.ai/eventproducer/api/v1/produceEvent",
+          "https://dev-api.powerpush.ai/eventproducer/api/v1/produceEvent",
           requestBody,
           {
             headers: {
@@ -302,7 +297,17 @@ const Login = () => {
           }
         );
 
-        console.log("Event sent successfully:", response.data);
+        console.log("Event sent successfully:", response.data.event[0].data.id);
+        const userId = response.data?.event[0].data.id
+
+        console.log("userId", userId);
+        navigate("/")
+        if (userId) {
+          localStorage.setItem("powerpush_user_id", userId);
+          console.log("User ID stored:", userId);
+        } else {
+          console.warn("User ID not returned from API");
+        }
       } catch (error) {
         console.error(
           "Error sending event:",
@@ -313,6 +318,9 @@ const Login = () => {
 
     produceEvent(); // Call API when component mounts
   };
+
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
 
   return (
     <form
@@ -330,6 +338,8 @@ const Login = () => {
           type="text"
           className="w-full px-3 py-2 border border-gray-800"
           placeholder="John Doe"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
         />
       )}
@@ -337,6 +347,8 @@ const Login = () => {
         type="email"
         className="w-full px-3 py-2 border border-gray-800"
         placeholder="hello@gmail.com"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         required
       />
       <input
